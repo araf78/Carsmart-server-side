@@ -12,6 +12,13 @@ async function run(){
     try {
         await client.connect();
         const carItem = client.db("carsmart").collection("items");
+
+        app.get('/item', async (req, res)=>{
+            const query = {};
+            const cursor = carItem.find(query);
+            const items = await cursor.toArray();
+            res.send(items)
+        })
     }
     finally {
         // await client.close()
