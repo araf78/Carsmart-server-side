@@ -1,5 +1,6 @@
 const express = require('express');
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
@@ -13,12 +14,29 @@ async function run(){
         await client.connect();
         const carItem = client.db("carsmart").collection("items");
 
+        // set data 
         app.get('/item', async (req, res)=>{
             const query = {};
             const cursor = carItem.find(query);
             const items = await cursor.toArray();
             res.send(items)
-        })
+        });
+
+          // delete a user 
+    app.delete('/item/:id', async (req, res)=>{
+        const id = req.params.id;
+        const query = {_id: ObjectId(id)};
+        const result = await userCollection.deleteOne(query);
+        res.send(result)
+      })
+
+        // post data
+        // app.post('/user',async (req,res)=>{
+        //     const newItem = req.body;
+        //     console.log('add new user',newItem);
+        //     const result = await userCollection.insertOne(newItem) 
+        //     res.send(result)
+        //   })
     }
     finally {
         // await client.close()
